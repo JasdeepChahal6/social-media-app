@@ -1,0 +1,11 @@
+.footer {
+    position: fixed; /* Ensures the footer stays fixed at the bottom */
+    bottom: 0;       /* Aligns it to the bottom of the viewport */
+    left: 0;         /* Ensures it starts from the left edge */
+    width: 100%;     /* Spans the entire width of the screen */
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    z-index: 1000;   /* Ensures the footer stays above other elements */
+}
