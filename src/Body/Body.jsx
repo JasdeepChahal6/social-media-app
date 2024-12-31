@@ -4,7 +4,7 @@ function Body(){
 
     return(
 
-        <div className={styles.createContainer}>
+        <div className={styles.container}>
             Hellow
         </div>
     );

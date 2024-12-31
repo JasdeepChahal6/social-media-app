@@ -1,12 +1,10 @@
-.createContainer{
+.container{
     display: flex;
     align-items: center;
     flex-direction: column;
     padding-top: 50px;
-    margin: 20px;
     min-height: 100vh; 
     border: 2px solid red;
-    /* background-image: linear-gradient(45deg, hsla(0, 2%, 69%, 0.918), hsla(0, 0%, 100%, 0.993)); */
-    /* border-radius: 20px; */
+    background-image: linear-gradient(hsl(189, 90%, 16%), hsla(0, 0%, 0%, 0.993));
     box-sizing: border-box;
 }
