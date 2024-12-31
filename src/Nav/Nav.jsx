@@ -1,6 +1,6 @@
 import './Nav.module.css';
 
-function Nav(){
+function Nav({createOwnPost, createRandomPost}){
     return(
      
 
@@ -11,8 +11,8 @@ function Nav(){
                 Create
             </button>
             <ul className="dropdown-menu" >
-                <li><a className="dropdown-item" href="#">Own Post</a></li>
-                <li><a className="dropdown-item" href="#">Random Post</a></li>
+                <li><button className="dropdown-item" onClick={createOwnPost}>Own Post</button></li>
+                <li><button className="dropdown-item" onClick={createRandomPost}>Random Post</button></li>
             </ul>
         </div>
           <button className="nav-link" id="nav-Read-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" >Read</button>
