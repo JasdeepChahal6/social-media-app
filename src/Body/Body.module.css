@@ -10,19 +10,22 @@
     box-sizing: border-box;
 }
 
-.post{
+.time{
     font-size:0.8rem;
     color: hsl(0, 1%, 43%);
     opacity: 75%;
 }
 
 .card{
-    height: auto;
-    width: 75%;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    background-color: black !important;
-    color: white !important;
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    width: 55%;
+    text-align: center; 
+    background-color: black;
+    color: white;
+    margin: 10px;
 }
 
 .text{
@@ -34,7 +37,7 @@
 }
 
 .cardImgTop {
-    width: 100%;
-    height: 200px; 
+    width: 95%;
+    height: 500px; 
     object-fit: cover;
 }

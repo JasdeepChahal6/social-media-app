@@ -50,9 +50,14 @@ function App() {
         const postImageURL = prompt("Enter image URL");
 
         if(!postText){
-        alert("Text is Required");
-        return;
-        }
+             alert("Text is Required");
+             return;
+             }
+
+        if(!postImageURL){
+            alert("Image is Required");
+            return;
+            }
 
         const timeofPost = new Date().toLocaleString('en-US', {
             year:'2-digit',
