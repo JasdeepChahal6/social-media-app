@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Header from "./Header/header";
 import Nav from "./Nav/Nav";
 import Body from "./Body/Body";
@@ -8,60 +9,90 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 function App() {
+    const [posts, setPosts] = useState([]);
 
-    const [post, setPost] = useState([]);
+  
+    const fetchPosts = async () => {
+        try {
+            const response = await axios.get("http://localhost:3000/");
+            console.log(response.data);
+            setPosts(response.data); 
+        } catch (error) {
+            console.error("Error fetching posts:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchPosts();
+    }, []);
+
+
+
+
+
+    
 
     const createRandomPost = async () => {
         let randomNum = Math.floor(Math.random() * 100 + 1);
-    const postImageURL = `https://picsum.photos/200/300?random=${randomNum}`;
+        const postImageURL = `https://picsum.photos/200/300?random=${randomNum}`;
         let postText = "...";
 
-    const timeofPost = new Date().toLocaleString('en-US', {
-        year:'2-digit',
-        month:'numeric', 
-        day: 'numeric',  
-        hour: '2-digit', 
-        minute: '2-digit', 
-        hour12: true });
+        const timeofPost = new Date().toLocaleString('en-US', {
+            year: '2-digit',
+            month: 'numeric', 
+            day: 'numeric',  
+            hour: '2-digit', 
+            minute: '2-digit', 
+            hour12: true
+        });
 
-    try{
-        const response = await fetch("https://api.quotable.io/random");
-        if(!response.ok){
-            throw new Error("COULD NOT FETCH");
+        try {
+            const response = await axios.get("https://api.quotable.io/random");
+            postText = response.data.content;  
+        } catch (error) {
+            console.error("Error fetching quote:", error);
         }
-        const data = await response.json();
-        console.log(data);
-        postText = data.content;
-    } catch(error){
-        console.error(error);
-    }
 
-    const newPost = {
-        id: Date.now(),
-        text: postText,
-        imageUrl: postImageURL,
-        time: timeofPost,
-    }
-    setPost([newPost, ...post]);
-    }
+        const newPost = {
+            id: Date.now(),
+            post_text: postText,
+            image_url: postImageURL,
+            time: timeofPost,
+        };
 
-    const createOwnPost = () => {
+        setPosts([newPost, ...posts]);
+
+        try {
+            await axios.post("http://localhost:3000/create", newPost);
+            fetchPosts();
+        } catch (error) {
+            console.error("Error creating post:", error);
+        }
+    };
+
+
+
+
+
+
+
+    const createOwnPost = async () => {
         const postText = prompt("Enter Post Text:");
         const postImageURL = prompt("Enter image URL");
 
-        if(!postText){
-             alert("Text is Required");
-             return;
-             }
+        if (!postText) {
+            alert("Text is Required");
+            return;
+        }
 
-        if(!postImageURL){
+        if (!postImageURL) {
             alert("Image is Required");
             return;
-            }
+        }
 
         const timeofPost = new Date().toLocaleString('en-US', {
-            year:'2-digit',
-            month:'numeric', 
+            year: '2-digit',
+            month: 'numeric', 
             day: 'numeric',  
             hour: '2-digit', 
             minute: '2-digit', 
@@ -70,23 +101,29 @@ function App() {
 
         const newPost = {
             id: Date.now(),
-            text: postText,
-            imageUrl: postImageURL,
+            post_text: postText,
+            image_url: postImageURL,
             time: timeofPost,
+        };
+
+        setPosts([newPost, ...posts]);
+
+        try {
+            await axios.post("http://localhost:3000/create", newPost);
+            setPosts([newPost, ...posts]);
+        } catch (error) {
+            console.error("Error creating post:", error);
         }
-        setPost([newPost, ...post]);
-    }
+    };
 
-    
-
-    return(
+    return (
         <>
-        <Header />
-        <Nav createOwnPost={createOwnPost} createRandomPost={createRandomPost}/>
-        <Body posts={post}/>
-        {/* <Footer /> */}
+            <Header />
+            <Nav createOwnPost={createOwnPost} createRandomPost={createRandomPost} />
+            <Body posts={posts} />
+            {/* <Footer /> */}
         </>
     );
 }
 
-export default App
+export default App;

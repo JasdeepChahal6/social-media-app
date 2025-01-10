@@ -8,11 +8,11 @@ function Body({posts}){
             {posts.map((post) => (
                 <div key={post.id} className={styles.card}>
 
-                    <img src={post.imageUrl || "https://picsum.photos/200/300?random=1"} alt="Post Image" className={styles.cardImgTop} />
+                    <img src={post.image_url} alt="Post Image" className={styles.cardImgTop} />
 
 
                     <div className="card-body">
-                        <p className={styles.text}>{post.text}</p>
+                        <p className={styles.text}>{post.post_text}</p>
                     </div>
 
                     <div className="card-footer">
