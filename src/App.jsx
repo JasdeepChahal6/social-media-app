@@ -3,14 +3,13 @@ import axios from "axios";
 import Header from "./Header/header";
 import Nav from "./Nav/Nav";
 import Body from "./Body/Body";
-import Footer from "./Footer/Footer"; 
+import Footer from "./Footer/Footer";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 function App() {
     const [posts, setPosts] = useState([]);
-
   
     const fetchPosts = async () => {
         try {
@@ -25,8 +24,6 @@ function App() {
     useEffect(() => {
         fetchPosts();
     }, []);
-
-
 
 
 
