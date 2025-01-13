@@ -45,18 +45,9 @@ app.post("/create", (req,res) => {
         return res.status(400).json("Post and Image required");
     }
 
-    const time = new Date().toLocaleString('en-US', {
-        year: '2-digit',
-        month: 'numeric', 
-        day: 'numeric',  
-        hour: '2-digit', 
-        minute: '2-digit', 
-        hour12: true 
-    });
-
     const query = "INSERT INTO posts (post_text, image_url) VALUES (?, ?)";
 
-    db.query(query, [post_text, image_url, time], (err, result) => {
+    db.query(query, [post_text, image_url], (err, result) => {
         if(err){
             return res.status(500).json({message:"database err", error: err});
         }

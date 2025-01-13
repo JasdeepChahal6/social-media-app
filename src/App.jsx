@@ -37,14 +37,14 @@ function App() {
         const postImageURL = `https://picsum.photos/200/300?random=${randomNum}`;
         let postText = "...";
 
-        // const timeofPost = new Date().toLocaleString('en-US', { //WORKS FOR WHEN NO BACKEND
-        //     year: '2-digit',
-        //     month: 'numeric', 
-        //     day: 'numeric',  
-        //     hour: '2-digit', 
-        //     minute: '2-digit', 
-        //     hour12: true
-        // });
+        const timeofPost = new Date().toLocaleString('en-US', { 
+            year: '2-digit',
+            month: 'numeric', 
+            day: 'numeric',  
+            hour: '2-digit', 
+            minute: '2-digit', 
+            hour12: true
+        });
 
         try {
             const response = await axios.get("https://api.quotable.io/random");
@@ -57,7 +57,7 @@ function App() {
             id: Date.now(),
             post_text: postText,
             image_url: postImageURL,
-            // time: timeofPost, //WORKS FOR WHEN NO BACKEND
+            time: timeofPost,
         };
 
         setPosts([newPost, ...posts]);
@@ -90,20 +90,20 @@ function App() {
             return;
         }
 
-        // const timeofPost = new Date().toLocaleString('en-US', { //WORKS FOR WHEN NO BACKEND
-        //     year: '2-digit',
-        //     month: 'numeric', 
-        //     day: 'numeric',  
-        //     hour: '2-digit', 
-        //     minute: '2-digit', 
-        //     hour12: true 
-        // });
+        const timeofPost = new Date().toLocaleString('en-US', {
+            year: '2-digit',
+            month: 'numeric', 
+            day: 'numeric',  
+            hour: '2-digit', 
+            minute: '2-digit', 
+            hour12: true 
+        });
 
         const newPost = {
             id: Date.now(),
             post_text: postText,
             image_url: postImageURL,
-            // time: timeofPost, //WORKS FOR WHEN NO BACKEND
+            time: timeofPost, 
         };
 
         setPosts([newPost, ...posts]);
