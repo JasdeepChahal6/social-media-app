@@ -113,10 +113,15 @@ function App() {
         }
     };
 
+    const readPosts = async () => {
+        window.location.reload();
+    };
+
+
     return (
         <>
             <Header />
-            <Nav createOwnPost={createOwnPost} createRandomPost={createRandomPost} />
+            <Nav createOwnPost={createOwnPost} createRandomPost={createRandomPost} readPosts={readPosts} />
             <Body posts={posts} />
             <Footer />
         </>
