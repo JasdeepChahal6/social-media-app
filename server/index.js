@@ -57,18 +57,36 @@ app.post("/create", (req,res) => {
     });
 });
 
-app.put("/update/:id", (req,res) => {
-    const {post_text} = req.body;
-    const {id} = req.params;
+app.delete("/delete/:id", (req, res) => {
+    const { id } = req.params;
 
-    const query = "UPDATE posts SET post_text = ? WHERE id = ?";
-    db.query(query, [post_text, id], (err, result) => {
-        if(err) {
+    const query = "DELETE FROM posts WHERE id = ?";
+    db.query(query, [id], (err, result) => {
+        if (err) {
             return res.status(500).json({ message: "Database error", error: err });
         }
-        res.json({ message: "Update successful" });
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+
+        res.json({ message: "Post deleted successfully" });
     });
 });
+
+
+app.delete("/delete/:id", (req,res) => {
+    const { id } = req.params;
+
+    const postIndex = posts.findIndex(post => post.id === parseInt(id));
+
+    if (postIndex !== -1) {
+        const deletedPost = posts.splice(postIndex, 1);
+        res.json(deletedPost);
+    } else {
+        res.status(404).json({ message: "Post not found" });
+    }
+})
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);

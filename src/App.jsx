@@ -11,6 +11,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 function App() {
     const [posts, setPosts] = useState([]);
     const [isUpdating, setIsUpdating] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false); // Add this state for delete mode
   
     const fetchPosts = async () => {
         try {
@@ -25,10 +26,6 @@ function App() {
     useEffect(() => {
         fetchPosts();
     }, []);
-
-
-
-    
 
     const createRandomPost = async () => {
         let randomNum = Math.floor(Math.random() * 100 + 1);
@@ -68,12 +65,6 @@ function App() {
         }
         window.location.reload();
     };
-
-
-
-
-
-
 
     const createOwnPost = async () => {
         const postText = prompt("Enter Post Text:");
@@ -116,21 +107,47 @@ function App() {
         window.location.reload();
     };
 
-
     const readPosts = async () => {
         window.location.reload();
     };
 
     const updatePosts = () => {
         setIsUpdating((prev) => !prev);
-    }
+    };
 
+    const deletePosts = async (postId) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+
+        if (confirmDelete) {
+            try {
+                await axios.delete(`http://localhost:3000/delete/${postId}`);
+                setPosts(posts.filter(post => post.id !== postId));
+            } catch (error) {
+                console.error("Error deleting post:", error);
+            }
+        } else {
+            console.log("Post deletion canceled");
+        }
+    };
 
     return (
         <>
             <Header />
-            <Nav createOwnPost={createOwnPost} createRandomPost={createRandomPost} readPosts={readPosts} updatePosts={updatePosts} />
-            <Body posts={posts} isUpdating={isUpdating} setPosts={setPosts} />
+            <Nav
+                createOwnPost={createOwnPost}
+                createRandomPost={createRandomPost}
+                readPosts={readPosts}
+                updatePosts={updatePosts}
+                deletePosts={deletePosts}
+                isDeleting={isDeleting}  // Pass isDeleting state to Nav
+                setIsDeleting={setIsDeleting}  // Pass setIsDeleting function to Nav
+            />
+            <Body 
+                posts={posts} 
+                isUpdating={isUpdating} 
+                setPosts={setPosts} 
+                isDeleting={isDeleting} 
+                deletePosts={deletePosts} />
             <Footer />
         </>
     );

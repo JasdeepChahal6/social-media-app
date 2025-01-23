@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styles from './Body.module.css';
 import axios from 'axios';
 
-function Body({posts, isUpdating, setPosts}){
+function Body({ posts, isUpdating, setPosts, isDeleting, deletePosts }) {
     const [editPostId, setEditPostId] = useState(null);
     const [updateText, setUpdateText] = useState('');
 
@@ -32,7 +32,6 @@ function Body({posts, isUpdating, setPosts}){
         setUpdateText('');
     };
 
-
     return (
         <div className={styles.container}>
             {posts.map((post) => (
@@ -53,11 +52,14 @@ function Body({posts, isUpdating, setPosts}){
 
                     <div className="card-footer">
                         <span className={styles.time}>{post.time}</span>
+
                         {isUpdating && (
                             <div>
                                 {editPostId === post.id ? (
                                     <>
-                                        <button onClick={() => handleSave(post.id)} disabled={!updateText.trim()}>Save</button>
+                                        <button onClick={() => handleSave(post.id)} disabled={!updateText.trim()}>
+                                            Save
+                                        </button>
                                         <button onClick={handleCancel}>Cancel</button>
                                     </>
                                 ) : (
@@ -65,12 +67,17 @@ function Body({posts, isUpdating, setPosts}){
                                 )}
                             </div>
                         )}
+
+                        {isDeleting && (
+                            <div>
+                                <button onClick={() => deletePosts(post.id)}>Delete</button>
+                            </div>
+                        )}
                     </div>
                 </div>
             ))}
         </div>
     );
-
 }
 
 export default Body;
