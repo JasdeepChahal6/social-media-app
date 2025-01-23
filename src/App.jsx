@@ -10,6 +10,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 function App() {
     const [posts, setPosts] = useState([]);
+    const [isUpdating, setIsUpdating] = useState(false);
   
     const fetchPosts = async () => {
         try {
@@ -65,6 +66,7 @@ function App() {
         } catch (error) {
             console.error("Error creating post:", error);
         }
+        window.location.reload();
     };
 
 
@@ -111,18 +113,24 @@ function App() {
         } catch (error) {
             console.error("Error creating post:", error);
         }
+        window.location.reload();
     };
+
 
     const readPosts = async () => {
         window.location.reload();
     };
 
+    const updatePosts = () => {
+        setIsUpdating((prev) => !prev);
+    }
+
 
     return (
         <>
             <Header />
-            <Nav createOwnPost={createOwnPost} createRandomPost={createRandomPost} readPosts={readPosts} />
-            <Body posts={posts} />
+            <Nav createOwnPost={createOwnPost} createRandomPost={createRandomPost} readPosts={readPosts} updatePosts={updatePosts} />
+            <Body posts={posts} isUpdating={isUpdating} setPosts={setPosts} />
             <Footer />
         </>
     );

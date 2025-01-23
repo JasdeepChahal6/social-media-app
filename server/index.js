@@ -57,6 +57,18 @@ app.post("/create", (req,res) => {
     });
 });
 
+app.put("/update/:id", (req,res) => {
+    const {post_text} = req.body;
+    const {id} = req.params;
+
+    const query = "UPDATE posts SET post_text = ? WHERE id = ?";
+    db.query(query, [post_text, id], (err, result) => {
+        if(err) {
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+        res.json({ message: "Update successful" });
+    });
+});
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);

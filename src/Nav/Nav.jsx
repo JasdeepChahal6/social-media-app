@@ -1,6 +1,6 @@
 import './Nav.module.css';
 
-function Nav({createOwnPost, createRandomPost, readPosts}){
+function Nav({createOwnPost, createRandomPost, readPosts, updatePosts}){
     return(
      
 
@@ -16,7 +16,7 @@ function Nav({createOwnPost, createRandomPost, readPosts}){
             </ul>
         </div>
           <button className="nav-link" id="nav-Read-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" onClick={readPosts}>Read</button>
-          <button className="nav-link" id="nav-Update-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" >Update</button>
+          <button className="nav-link" id="nav-Update-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" onClick={updatePosts}>Update</button>
           <button className="nav-link" id="nav-Delete-tab" data-bs-toggle="tab" data-bs-target="#nav-disabled" type="button" role="tab" >Delete</button>
         </div>
       </nav>
