@@ -11,7 +11,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 function App() {
     const [posts, setPosts] = useState([]);
     const [isUpdating, setIsUpdating] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false); // Add this state for delete mode
+    const [isDeleting, setIsDeleting] = useState(false);
   
     const fetchPosts = async () => {
         try {
@@ -139,8 +139,8 @@ function App() {
                 readPosts={readPosts}
                 updatePosts={updatePosts}
                 deletePosts={deletePosts}
-                isDeleting={isDeleting}  // Pass isDeleting state to Nav
-                setIsDeleting={setIsDeleting}  // Pass setIsDeleting function to Nav
+                isDeleting={isDeleting} 
+                setIsDeleting={setIsDeleting}  
             />
             <Body 
                 posts={posts} 

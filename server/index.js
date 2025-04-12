@@ -75,19 +75,6 @@ app.delete("/delete/:id", (req, res) => {
 });
 
 
-app.delete("/delete/:id", (req,res) => {
-    const { id } = req.params;
-
-    const postIndex = posts.findIndex(post => post.id === parseInt(id));
-
-    if (postIndex !== -1) {
-        const deletedPost = posts.splice(postIndex, 1);
-        res.json(deletedPost);
-    } else {
-        res.status(404).json({ message: "Post not found" });
-    }
-})
-
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
 });
