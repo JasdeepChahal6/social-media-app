@@ -138,6 +138,8 @@ function App() {
                 createRandomPost={createRandomPost}
                 readPosts={readPosts}
                 updatePosts={updatePosts}
+                isUpdating={isUpdating}
+                setIsUpdating={setIsUpdating}
                 deletePosts={deletePosts}
                 isDeleting={isDeleting} 
                 setIsDeleting={setIsDeleting}  

@@ -31,7 +31,7 @@ db.connect((err) => {
 });
 
 app.get("/", (req, res) => {
-    db.query("SELECT id, post_text, image_url, DATE_FORMAT(time, '%m/%d/%y %h:%i %p') AS time FROM posts ORDER BY time DESC", (err, result) => {
+    db.query("SELECT id, post_text, image_url, DATE_FORMAT(time, '%m/%d/%y %h:%i:%s %p') AS time FROM posts ORDER BY time DESC", (err, result) => {
         if(err){
             res.status(500).json(err)
         }else{
