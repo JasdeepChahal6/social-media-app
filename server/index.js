@@ -2,6 +2,7 @@ import express from "express";
 import mysql from "mysql2";
 import cors from "cors";
 import dotenv from "dotenv";
+import bcrypt from "bcrypt";
 dotenv.config();
 const corsOptions = {
     origin: [process.env.FRONTEND_URL],
@@ -71,6 +72,46 @@ app.delete("/delete/:id", (req, res) => {
         }
 
         res.json({ message: "Post deleted successfully" });
+    });
+});
+
+
+app.post("/register", (req, res) => {
+    const {username, password} = req.body;
+
+    db.query("SELECT * FROM users WHERE username = ?", [username], async (err,result) => {
+        if(err){
+            return res.status(500).json({
+                message:"Database error", 
+                error: err
+            });
+        }
+        if(result.length > 0){
+            return res.status(400).json({
+                message:"Username already exists",
+            });
+        }
+
+        try{
+            const hashPassword = await bcrypt.hash(password, 10);
+
+            db.query("INSERT INTO users (username, password) VALUES (?,?)", [username, hashPassword], (err, result) => {
+                if(err){
+                    return res.status(500).json({
+                        message:"Database error",
+                        error:err
+                    });
+                }
+                return res.status(201).json({
+                    message:`${username} has be registered`
+                });
+            });
+        }catch(error){
+            return res.status(500).json({
+                message:"Error hashing password",
+                error:error
+            });
+        }
     });
 });
 
