@@ -3,7 +3,7 @@ import styles from './Header.module.css';
 function Header(){
     return(
             <div className={styles.header}>
-            <header><b>Janky Social Media App</b></header>
+            <header><b>Welcome to Janky</b></header>
             </div>
         
     );
