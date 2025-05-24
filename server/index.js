@@ -3,6 +3,8 @@ import mysql from "mysql2";
 import cors from "cors";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken';
+
 dotenv.config();
 const corsOptions = {
     origin: [process.env.FRONTEND_URL],
@@ -58,6 +60,23 @@ app.post("/create", (req,res) => {
     });
 });
 
+app.put("/update/:id", (req, res) => {
+    const { id } = req.params;
+    const { post_text } = req.body;
+
+    const query = "UPDATE posts SET post_text = ? WHERE id = ?";
+    db.query(query, [post_text, id], (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+        res.status(200).json({ message: "Post updated successfully" });
+    });
+});
+
+
 app.delete("/delete/:id", (req, res) => {
     const { id } = req.params;
 
@@ -72,46 +91,6 @@ app.delete("/delete/:id", (req, res) => {
         }
 
         res.json({ message: "Post deleted successfully" });
-    });
-});
-
-
-app.post("/register", (req, res) => {
-    const {username, password} = req.body;
-
-    db.query("SELECT * FROM users WHERE username = ?", [username], async (err,result) => {
-        if(err){
-            return res.status(500).json({
-                message:"Database error", 
-                error: err
-            });
-        }
-        if(result.length > 0){
-            return res.status(400).json({
-                message:"Username already exists",
-            });
-        }
-
-        try{
-            const hashPassword = await bcrypt.hash(password, 10);
-
-            db.query("INSERT INTO users (username, password) VALUES (?,?)", [username, hashPassword], (err, result) => {
-                if(err){
-                    return res.status(500).json({
-                        message:"Database error",
-                        error:err
-                    });
-                }
-                return res.status(201).json({
-                    message:`${username} has be registered`
-                });
-            });
-        }catch(error){
-            return res.status(500).json({
-                message:"Error hashing password",
-                error:error
-            });
-        }
     });
 });
 
