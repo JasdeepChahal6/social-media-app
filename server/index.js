@@ -162,9 +162,11 @@ app.post("/register", (req, res) => {
 app.post("/login", (req, res) => {
 
     const {username, password} = req.body;
+    console.log("Attempted login:", username);
 
     db.query("SELECT * FROM users WHERE username = ?", [username], async (err,result) => {
         if(err){
+            console.error("DB error:", err);
             return res.status(500).json({
                 message:"Database error",
                 error:err
