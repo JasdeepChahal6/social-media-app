@@ -1,6 +1,7 @@
-# Social Media App
+# Janky
 
-A simple social media application built using React, Node.js, and Express, allowing users to create, view, and manage posts. This project demonstrates basic API consumption, state management, and CRUD operations.
+Janky is a full-stack web application built using React, Node.js, and Express, allowing users to authorized users to perform CRUD opertations on posts. Demonstrating API consumption and state management.
+You can find the <a href="https://social-media-app-77sy.vercel.app">project here!</a>
 
 ## IMPORTANT
 
