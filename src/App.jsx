@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Header from "./Header/header";
+import Header from "./Header/Header";
 import Nav from "./Nav/Nav";
 import Body from "./Body/Body";
 import Footer from "./Footer/Footer";
