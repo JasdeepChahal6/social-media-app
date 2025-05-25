@@ -1,12 +1,10 @@
 # Janky
 
-Janky is a full-stack web application built using React, Node.js, and Express, allowing users to authorized users to perform CRUD opertations on posts. Demonstrating API consumption and state management.
+Janky is a full-stack web application built using React, Node.js, and Express, allowing users to authorized users to perform CRUD opertations on posts. Demonstrating API consumption and state management.<br></br>
 You can find the <a href="https://social-media-app-77sy.vercel.app">project here!</a>
+<br></br>
 
-## IMPORTANT
-
-**This project is still a work in progress.** Currently, the following features are implemented:
-- **Create post** functionality, including database integration.
+NOTE: The database is currently not being hosted...
 
 The following features are yet to be implemented:
 - Full **CRUD (Create, Read, Update, Delete)** functionality for posts.
@@ -15,16 +13,15 @@ The following features are yet to be implemented:
 
 ## Features
 
-- Display a list of posts from the server.
-- Create random posts with random quotes and images from Picsum.
-- Create custom posts with user-provided text and image URLs.
-- Bootstrap for responsive and aesthetic design.
+<b>Frontend</b>: Designed a responsive, user-friendly interface using React, Axios, and Bootstrap to display a dynamic feed of posts.
 
-## Technologies Used
+<b>Post Functionality</b>: Enabled creation of custom posts with user-provided text and image URLs, and generation of randomized posts using external quote and image APIs.
 
-- **Frontend**: React, Axios, Bootstrap
-- **Backend**: Node.js, Express, mySQL
-- **Environment Variables**: .env for storing API keys and URLs
-- **Development Tools**: Visual Studio Code, Git, Postman (for testing APIs)
+<b>Backend</b>: Built a RESTful API with Node.js and Express to handle user authentication, post creation, updating, and deletion.
+
+<b>Database</b>: Integrated a MySQL database for persistent storage and efficient querying of user and post data.
+
+<b>Authentication</b>: Implemented secure JWT-based authentication and bcrypt password hashing to manage user sessions.
+
 
 
