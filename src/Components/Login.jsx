@@ -31,7 +31,7 @@ export default function Login() {
         throw new Error(data.message || "Login failed");
       }
 
-      localStorage.setItem("token", data.t)
+      localStorage.setItem("token", data.token)
 
       login(data.token);
       navigate("/"); // redirect to home
