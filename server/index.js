@@ -34,15 +34,15 @@ const db = mysql.createPool({
   queueLimit: 0
 });
 
-db.connect((err) => {
-    if(err){
-        console.log(err);
-        return;
-    }
-    else {
-        console.log("success");
-    }
-});
+// db.connect((err) => {
+//     if(err){
+//         console.log(err);
+//         return;
+//     }
+//     else {
+//         console.log("success");
+//     }
+// });
 
 function verifyToken(req, res, next) {
     const authHeader = req.headers["authorization"];
