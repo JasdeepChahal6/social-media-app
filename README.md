@@ -6,11 +6,6 @@ You can find the <a href="https://social-media-app-77sy.vercel.app">project here
 
 NOTE: The database is currently not being hosted...
 
-The following features are yet to be implemented:
-- Full **CRUD (Create, Read, Update, Delete)** functionality for posts.
-- **User authentication** (login, registration, session management).
-
-
 ## Features
 
 <b>Frontend</b>: Designed a responsive, user-friendly interface using React, Axios, and Bootstrap to display a dynamic feed of posts.
