@@ -17,7 +17,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://social-media-app-backend-zenq.onrender.com/login", {
+      const res = await fetch("https://social-media-app-backend-zenq.onrender.com/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -31,7 +31,7 @@ function Register() {
 
     try {
       // Replace with your actual backend register URL
-      const response = await axios.post("http://social-media-app-backend-zenq.onrender.com/register", {
+      const response = await axios.post("https://social-media-app-backend-zenq.onrender.com/register", {
         username: formData.username,
         password: formData.password,
       });
