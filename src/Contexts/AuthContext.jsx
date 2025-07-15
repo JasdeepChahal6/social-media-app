@@ -9,7 +9,8 @@ export function AuthProvider({ children }) {
     localStorage.setItem("token", token);
     setToken(token);
   };
-
+// Authentication context provider.
+// Supplies login, logout, and token state to the app.
   const logout = () => {
     localStorage.removeItem("token");
     setToken(null);
@@ -32,3 +33,5 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   return useContext(AuthContext);
 }
+
+// Value provided to context consumers: { token, login, logout }

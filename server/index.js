@@ -1,3 +1,5 @@
+// Express server entry point.
+// Sets up middleware, connects to MySQL, and defines API endpoints.
 import express from "express";
 import mysql from "mysql2";
 import cors from "cors";

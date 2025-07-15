@@ -2,6 +2,9 @@ import React, {useState} from 'react'
 import { useAuth } from '../Contexts/AuthContext'
 import {useNavigate, Link} from "react-router-dom"
 
+// Login/Register component.
+// Handles user authentication/registration and updates auth context.
+
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

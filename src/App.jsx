@@ -17,6 +17,8 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
+// Main application component.
+// Handles routing, authentication, and post CRUD logic.
 function App() {
   const { token } = useAuth();
 
