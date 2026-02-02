@@ -7,11 +7,25 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 
-dotenv.config();
+dotenv.config({ override: true });
+
+const envOrigins = (process.env.FRONTEND_URLS || process.env.FRONTEND_URL || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+const defaultOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
+const allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins])];
+
 const corsOptions = {
-    origin: process.env.FRONTEND_URL,
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error("Not allowed by CORS"));
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
+    credentials: true,
 };
 
 const app = express();
