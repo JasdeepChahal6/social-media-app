@@ -1,7 +1,7 @@
 // Express server entry point.
 // Sets up middleware, connects to MySQL, and defines API endpoints.
 import express from "express";
-import mysql from "mysql2";
+import pg from "pg";
 import cors from "cors";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
@@ -40,16 +40,22 @@ app.use(express.json());
 //     password:process.env.DB_PASSWORD,
 //     database:process.env.DB_NAME
 // });
-const db = mysql.createPool({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-});
+const { Pool } = pg;
+
+const dbConfig = process.env.DATABASE_URL
+    ? {
+            connectionString: process.env.DATABASE_URL,
+            ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+        }
+    : {
+            host: process.env.PGHOST,
+            port: process.env.PGPORT ? Number(process.env.PGPORT) : 5432,
+            user: process.env.PGUSER,
+            password: process.env.PGPASSWORD,
+            database: process.env.PGDATABASE,
+        };
+
+const db = new Pool(dbConfig);
 
 // db.connect((err) => {
 //     if(err){
@@ -79,14 +85,15 @@ function verifyToken(req, res, next) {
     });
 }
 
-app.get("/", (req, res) => {
-    db.query("SELECT id, post_text, image_url, DATE_FORMAT(time, '%m/%d/%y %h:%i:%s %p') AS time FROM posts ORDER BY time DESC", (err, result) => {
-        if(err){
-            res.status(500).json(err)
-        }else{
-            res.json(result);
-        }
-    });
+app.get("/", async (req, res) => {
+    try {
+        const result = await db.query(
+            "SELECT id, post_text, image_url, to_char(time, 'MM/DD/YY HH12:MI:SS AM') AS time FROM posts ORDER BY time DESC"
+        );
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json(err);
+    }
 });
 
 app.post("/create", verifyToken,(req,res) => {
@@ -96,144 +103,95 @@ app.post("/create", verifyToken,(req,res) => {
         return res.status(400).json("Post and Image required");
     }
 
-    const query = "INSERT INTO posts (post_text, image_url) VALUES (?, ?)";
+    const query = "INSERT INTO posts (post_text, image_url) VALUES ($1, $2)";
 
-    db.query(query, [post_text, image_url], (err, result) => {
-        if(err){
-            return res.status(500).json({message:"database err", error: err});
-        }
-        res.status(201).json({message:"success"});
-    });
+    db.query(query, [post_text, image_url])
+        .then(() => res.status(201).json({ message: "success" }))
+        .catch((err) => res.status(500).json({ message: "database err", error: err }));
 });
 
 app.put("/update/:id", verifyToken,(req, res) => {
     const { id } = req.params;
     const { post_text } = req.body;
 
-    const query = "UPDATE posts SET post_text = ? WHERE id = ?";
-    db.query(query, [post_text, id], (err, result) => {
-        if (err) {
-            return res.status(500).json({ message: "Database error", error: err });
-        }
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: "Post not found" });
-        }
-        res.status(200).json({ message: "Post updated successfully" });
-    });
+    const query = "UPDATE posts SET post_text = $1 WHERE id = $2";
+    db.query(query, [post_text, id])
+        .then((result) => {
+            if (result.rowCount === 0) {
+                return res.status(404).json({ message: "Post not found" });
+            }
+            res.status(200).json({ message: "Post updated successfully" });
+        })
+        .catch((err) => res.status(500).json({ message: "Database error", error: err }));
 });
 
 
 app.delete("/delete/:id", verifyToken,(req, res) => {
     const { id } = req.params;
 
-    const query = "DELETE FROM posts WHERE id = ?";
-    db.query(query, [id], (err, result) => {
-        if (err) {
-            return res.status(500).json({ message: "Database error", error: err });
-        }
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: "Post not found" });
-        }
-
-        res.json({ message: "Post deleted successfully" });
-    });
+    const query = "DELETE FROM posts WHERE id = $1";
+    db.query(query, [id])
+        .then((result) => {
+            if (result.rowCount === 0) {
+                return res.status(404).json({ message: "Post not found" });
+            }
+            res.json({ message: "Post deleted successfully" });
+        })
+        .catch((err) => res.status(500).json({ message: "Database error", error: err }));
 });
 
 
-app.post("/register", (req, res) => {
+app.post("/register", async (req, res) => {
     const {username, password} = req.body;
 
     if (!username || !password) {
     return res.status(400).json({ message: "Username and password required" });
     }
 
-    db.query("SELECT * FROM users WHERE username = ?", [username], async (err,result) => {
-        if(err){
-            return res.status(500).json({
-                message:"Database error", 
-                error: err
-            });
-        }
-        if(result.length > 0){
-            return res.status(400).json({
-                message:"Username already exists",
-            });
+    try {
+        const existing = await db.query("SELECT 1 FROM users WHERE username = $1", [username]);
+        if (existing.rowCount > 0) {
+            return res.status(400).json({ message: "Username already exists" });
         }
 
-        try{
-            const hashPassword = await bcrypt.hash(password, 10);
+        const hashPassword = await bcrypt.hash(password, 10);
+        await db.query("INSERT INTO users (username, password) VALUES ($1, $2)", [username, hashPassword]);
 
-            db.query("INSERT INTO users (username, password) VALUES (?,?)", [username, hashPassword], (err, result) => {
-                if(err){
-                    return res.status(500).json({
-                        message:"Database error",
-                        error:err
-                    });
-                }
-                return res.status(201).json({
-                    message:`${username} has be registered`
-                });
-            });
-        }catch(error){
-            return res.status(500).json({
-                message:"Error hashing password",
-                error:error
-            });
-        }
-    });
+        return res.status(201).json({ message: `${username} has be registered` });
+    } catch (error) {
+        return res.status(500).json({ message: "Database error", error });
+    }
 });
 
 
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
 
     const {username, password} = req.body;
     console.log("Attempted login:", username);
 
-    db.query("SELECT * FROM users WHERE username = ?", [username], async (err,result) => {
-        if(err){
-            console.error("DB error:", err);
-            return res.status(500).json({
-                message:"Database error",
-                error:err
-            }); 
-        }
-        if(result.length == 0){
-            return res.status(404).json({
-                message: `${username} does not exist`
-            });
+    try {
+        const result = await db.query("SELECT * FROM users WHERE username = $1", [username]);
+        if (result.rowCount === 0) {
+            return res.status(404).json({ message: `${username} does not exist` });
         }
 
-        const user = result[0];
-        // console.log("Password from DB:", user.password);
-        // console.log("Password from user:", password);
-        try{
-            
-            const passwordMatch = await bcrypt.compare(password, user.password);
+        const user = result.rows[0];
+        const passwordMatch = await bcrypt.compare(password, user.password);
 
-            if(!passwordMatch){
-                return res.status(401).json({
-                    message: "Wrong password"
-                });
-            }
-
-            const token = jwt.sign(
-                { id: user.id, username: user.username },  // Payload
-                process.env.JWT_SECRET,                     // Secret key from .env
-                { expiresIn: '1h' }                         // Token expires in 1 hour
-            );
-
-            return res.status(200).json({
-                message: "Login successful",
-                token: token 
-            });
-        } catch (error) {
-            return res.status(500).json({
-                message: "Error comparing password",
-                error: error
-            });
+        if (!passwordMatch) {
+            return res.status(401).json({ message: "Wrong password" });
         }
-    });
+
+        const token = jwt.sign(
+            { id: user.id, username: user.username },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        return res.status(200).json({ message: "Login successful", token });
+    } catch (error) {
+        return res.status(500).json({ message: "Database error", error });
+    }
 });
 
 
