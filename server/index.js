@@ -1,4 +1,5 @@
 // Express server entry point.
+// Repo marker: social-media-app (Phase 2) — Feb 2, 2026.
 // Sets up middleware, connects to MySQL, and defines API endpoints.
 import express from "express";
 import mysql from "mysql2";
