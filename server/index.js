@@ -1,5 +1,4 @@
 // Express server entry point.
-// Repo marker: social-media-app (Phase 2) — Feb 2, 2026.
 // Sets up middleware, connects to MySQL, and defines API endpoints.
 import express from "express";
 import mysql from "mysql2";
@@ -16,7 +15,7 @@ const corsOptions = {
 };
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -28,8 +27,8 @@ app.use(express.json());
 //     database:process.env.DB_NAME
 // });
 const db = mysql.createPool({
-  host: process.env.DB_HOST,
-  port: process.env.PORT,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,

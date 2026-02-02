@@ -5,6 +5,8 @@ import {useNavigate, Link} from "react-router-dom"
 // Login/Register component.
 // Handles user authentication/registration and updates auth context.
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +22,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch("https://social-media-app-backend-zenq.onrender.com/login", {
+      const res = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

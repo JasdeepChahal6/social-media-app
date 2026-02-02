@@ -17,6 +17,8 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+
 // Main application component.
 // Handles routing, authentication, and post CRUD logic.
 function App() {
@@ -28,7 +30,7 @@ function App() {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get("https://social-media-app-backend-zenq.onrender.com/");
+      const response = await axios.get(`${API_BASE_URL}`);
       setPosts(response.data);
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -70,7 +72,7 @@ function App() {
     setPosts([newPost, ...posts]);
 
     try {
-      await axios.post("https://social-media-app-backend-zenq.onrender.com/create", newPost, {
+      await axios.post(`${API_BASE_URL}/create`, newPost, {
         headers: {
           Authorization: `Bearer ${token}`, // Add token here
         },
@@ -114,7 +116,7 @@ function App() {
     setPosts([newPost, ...posts]);
 
     try {
-      await axios.post("https://social-media-app-backend-zenq.onrender.com/create", newPost, {
+      await axios.post(`${API_BASE_URL}/create`, newPost, {
         headers: {
           Authorization: `Bearer ${token}`, // Add token here
         },
@@ -136,7 +138,7 @@ function App() {
   const editPost = async (postId, newText) => {//for body
     try {
       await axios.put(
-        `https://social-media-app-backend-zenq.onrender.com/update/${postId}`,
+        `${API_BASE_URL}/update/${postId}`,
         { post_text: newText },
         {
           headers: {
@@ -161,7 +163,7 @@ function App() {
 
     if (confirmDelete) {
       try {
-        await axios.delete(`https://social-media-app-backend-zenq.onrender.com/delete/${postId}`, {
+        await axios.delete(`${API_BASE_URL}/delete/${postId}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Add token here
           },

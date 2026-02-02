@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 // Login/Register component.
 // Handles user authentication/registration and updates auth context.
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+
 function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -33,7 +35,7 @@ function Register() {
     }
 
     try {
-      const response = await axios.post("https://social-media-app-backend-zenq.onrender.com/register", {
+      const response = await axios.post(`${API_BASE_URL}/register`, {
         username: formData.username,
         password: formData.password,
       });
